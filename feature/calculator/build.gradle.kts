@@ -1,5 +1,7 @@
 plugins {
     id("kurrent.android.feature")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -7,10 +9,18 @@ android {
 }
 
 dependencies {
-    // Use bundles - much cleaner!
-    implementation(libs.bundles.android.ui)
-    implementation(platform(libs.androidx.compose.bom))
-    implementation(libs.bundles.compose)
+    implementation(project(":core:ui"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:utility"))
+    implementation(project(":core:data"))
+
+    implementation(libs.bundles.hilt)
+    ksp(libs.hilt.compiler)
+    implementation(libs.bundles.coroutines)
+    
+//    implementation(libs.bundles.android.ui)
+//    implementation(platform(libs.androidx.compose.bom))
+//    implementation(libs.bundles.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.bundles.android.test)

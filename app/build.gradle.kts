@@ -54,7 +54,11 @@ kotlin {
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":feature:currency-list"))
+    implementation(project(":feature:calculator"))
 
+    implementation(libs.bundles.compose)
+    implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.bundles.android.ui)
     implementation(libs.bundles.coroutines)
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)

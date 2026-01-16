@@ -88,12 +88,17 @@ class CurrencyRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveConversionCurrency(saveConversionDomain: SaveConversionDomain) {
-        saveConversionDao.insertSavedConversionCurrency(saveConversionDomain.toEntity())
+        saveConversionDao.replaceSavedConversionCurrency(saveConversionDomain.toEntity())
     }
 
     override suspend fun getSavedConversionCurrency(): SaveConversionDomain? {
         val entity = saveConversionDao.getSavedConversionCurrency()
         return entity?.toDomain()
+    }
+
+    override fun observeSavedConversionCurrency(): Flow<SaveConversionDomain?> {
+        return saveConversionDao.observeSavedConversionCurrency()
+            .map { entity -> entity?.toDomain() }
     }
 
 

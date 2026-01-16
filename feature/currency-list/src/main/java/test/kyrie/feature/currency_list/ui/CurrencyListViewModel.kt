@@ -34,8 +34,8 @@ class CurrencyListViewModel @Inject constructor(
     init {
         // Load currencies on initialization (offline-first)
         getCurrencies(forceRefresh = false)
-        // Load saved conversion from calculator (if any)
-        getConversionCurrency()
+        // Observe saved conversion from calculator
+        observeConversionCurrency()
     }
 
     /**
@@ -108,14 +108,16 @@ class CurrencyListViewModel @Inject constructor(
     }
 
     /**
-     * Get the saved conversion currency for the Quick look data
+     * Observe the saved conversion currency for the Quick look data
      */
-    private fun getConversionCurrency() {
+    private fun observeConversionCurrency() {
         viewModelScope.launch(ioDispatcher) {
-            val conversionCurrency = conversionCurrencyUseCase.getSavedConversionCurrency()
-            _uiState.value = _uiState.value.copy(
-                savedConversion = conversionCurrency?.toUi()
-            )
+            conversionCurrencyUseCase.observeSavedConversionCurrency()
+                .collect { conversionCurrency ->
+                    _uiState.value = _uiState.value.copy(
+                        savedConversion = conversionCurrency?.toUi()
+                    )
+                }
         }
     }
 }

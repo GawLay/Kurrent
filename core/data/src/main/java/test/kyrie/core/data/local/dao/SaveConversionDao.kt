@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
 import test.kyrie.core.data.local.entity.SaveConversionEntity
 
 @Dao
@@ -14,6 +15,9 @@ interface SaveConversionDao {
 
     @Query("SELECT * FROM save_conversions LIMIT 1")
     suspend fun getSavedConversionCurrency(): SaveConversionEntity?
+
+    @Query("SELECT * FROM save_conversions LIMIT 1")
+    fun observeSavedConversionCurrency(): Flow<SaveConversionEntity?>
 
     @Query("DELETE FROM save_conversions")
     suspend fun deleteSavedConversions()
