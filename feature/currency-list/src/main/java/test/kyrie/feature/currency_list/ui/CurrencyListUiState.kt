@@ -1,21 +1,24 @@
 package test.kyrie.feature.currency_list.ui
 
+
 import test.kyrie.feature.currency_list.model.Currency
 import test.kyrie.feature.currency_list.model.SavedConversion
+import test.kyrie.feature.util.FeatureCurrencyConstants
 
-/**
- * UI state for the Currency List Screen
- */
+
 data class CurrencyListUiState(
     val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
     val savedConversion: SavedConversion? = null,
     val currencies: List<Currency> = emptyList(),
     val selectedCurrency: String? = null,
+    val baseCurrency: String = "USD",
+    val availableCurrencies: Map<String, String> = emptyMap(),
     val error: String? = null
 ) {
     companion object {
         /**
-         * Provides mock data for preview and testing
+         *  mock data for preview
          */
         fun mockData(): CurrencyListUiState {
             return CurrencyListUiState(
@@ -26,48 +29,43 @@ data class CurrencyListUiState(
                     toAmount = "0.67",
                     toCurrency = "USD"
                 ),
+                baseCurrency = "USD",
                 currencies = listOf(
                     Currency(
-                        code = "JPY",
-                        name = "Japanese Yen",
-                        flagEmoji = "🇯🇵",
-                        exchangeRate = 148.50
+                        currencyCode = "JPY",
+                        currencyName = "Japanese Yen",
+                        countryName = "Japan",
+                        countryCode = "JP",
+                        iconUrl = FeatureCurrencyConstants.DEFAULT_ICON_URL.defaultValue,
+                        rateToUsd = "148.50",
+                        isAvailable = true
                     ),
                     Currency(
-                        code = "USD",
-                        name = "United States Dollar",
-                        flagEmoji = "🇺🇸",
-                        exchangeRate = 148.50
+                        currencyCode = "EUR",
+                        currencyName = "Euro",
+                        countryName = "European Union",
+                        countryCode = "EU",
+                        iconUrl = FeatureCurrencyConstants.DEFAULT_ICON_URL.defaultValue,
+                        rateToUsd = "1.10",
+                        isAvailable = true
                     ),
                     Currency(
-                        code = "GBP",
-                        name = "British Pound",
-                        flagEmoji = "🇬🇧",
-                        exchangeRate = 148.00
+                        currencyCode = "GBP",
+                        currencyName = "British Pound",
+                        countryName = "United Kingdom",
+                        countryCode = "GB",
+                        iconUrl = FeatureCurrencyConstants.DEFAULT_ICON_URL.defaultValue,
+                        rateToUsd = "1.25",
+                        isAvailable = true
                     ),
                     Currency(
-                        code = "CAD",
-                        name = "Canadian Dollar",
-                        flagEmoji = "🇨🇦",
-                        exchangeRate = 140.00
-                    ),
-                    Currency(
-                        code = "AUD",
-                        name = "Australian Dollar",
-                        flagEmoji = "🇦🇺",
-                        exchangeRate = 148.50
-                    ),
-                    Currency(
-                        code = "CNY",
-                        name = "Chinese Yuan",
-                        flagEmoji = "🇨🇳",
-                        exchangeRate = 128.00
-                    ),
-                    Currency(
-                        code = "EUR",
-                        name = "Euro",
-                        flagEmoji = "🇪🇺",
-                        exchangeRate = 148.50
+                        currencyCode = "AUD",
+                        currencyName = "Australian Dollar",
+                        countryName = "Australia",
+                        countryCode = "AU",
+                        iconUrl = FeatureCurrencyConstants.DEFAULT_ICON_URL.defaultValue,
+                        rateToUsd = "0.70",
+                        isAvailable = true
                     )
                 )
             )

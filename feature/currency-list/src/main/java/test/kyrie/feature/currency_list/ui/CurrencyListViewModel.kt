@@ -1,47 +1,122 @@
 package test.kyrie.feature.currency_list.ui
 
+
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
+import test.kyrie.core.data.di.IoDispatcher
+import test.kyrie.core.domain.usecase.ConversionCurrencyUseCase
+import test.kyrie.core.domain.usecase.GetCurrenciesUseCase
+import test.kyrie.core.domain.usecase.RefreshCurrenciesUseCase
+import test.kyrie.core.domain.util.onError
+import test.kyrie.core.domain.util.onLoading
+import test.kyrie.core.domain.util.onSuccess
+import test.kyrie.feature.currency_list.model.mapper.toUi
+import javax.inject.Inject
 
-/**
- * ViewModel for Currency List Screen
- * Manages UI state and business logic
- */
-class CurrencyListViewModel : ViewModel() {
-    
-    private val _uiState = MutableStateFlow(CurrencyListUiState.mockData())
+@HiltViewModel
+class CurrencyListViewModel @Inject constructor(
+    private val getCurrenciesUseCase: GetCurrenciesUseCase,
+    private val conversionCurrencyUseCase: ConversionCurrencyUseCase,
+    private val refreshCurrenciesUseCase: RefreshCurrenciesUseCase,
+    @param:IoDispatcher private val ioDispatcher: CoroutineDispatcher
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(CurrencyListUiState())
     val uiState: StateFlow<CurrencyListUiState> = _uiState.asStateFlow()
-    
-    /**
-     * Handle currency item click
-     */
-    fun onCurrencyClick(currencyCode: String) {
-        _uiState.value = _uiState.value.copy(
-            selectedCurrency = currencyCode
-        )
+
+    init {
+        // Load currencies on initialization (offline-first)
+        getCurrencies(forceRefresh = false)
+        // Load saved conversion from calculator (if any)
+        getConversionCurrency()
     }
-    
+
     /**
-     * Navigate to calculator screen
+     * Fetch currencies from repository
+     * @param forceRefresh - if true, forces a network call
+     * otherwise uses cache/timer strategy
      */
-    fun onCalculatorClick() {
-        // Navigation logic will be handled by the screen
+    fun getCurrencies(forceRefresh: Boolean = false) {
+        viewModelScope.launch(ioDispatcher) {
+            getCurrenciesUseCase(forceRefresh)
+                .catch { exception ->
+                    _uiState.value = _uiState.value.copy(
+                        isLoading = false,
+                        error = exception.message ?: "Unknown error occurred"
+                    )
+                }
+                .collect { result ->
+                    result
+                        .onLoading {
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = true,
+                                error = null
+                            )
+                        }
+                        .onSuccess { currencies ->
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                currencies = currencies.toUi(),
+                                error = null
+                            )
+                        }
+                        .onError { exception, message ->
+                            _uiState.value = _uiState.value.copy(
+                                isLoading = false,
+                                error = message ?: exception.message ?: "Failed to load currencies"
+                            )
+                        }
+                }
+        }
     }
-    
+
     /**
-     * Refresh currency data
+     * This always forces a network call
      */
     fun refreshCurrencies() {
-        _uiState.value = _uiState.value.copy(
-            isLoading = true
-        )
-        
-        // Simulate data loading
-        // In real implementation, this would call a repository
-        _uiState.value = _uiState.value.copy(
-            isLoading = false
-        )
+        viewModelScope.launch(ioDispatcher) {
+            _uiState.value = _uiState.value.copy(
+                isRefreshing = true,
+                error = null
+            )
+
+            val result = refreshCurrenciesUseCase()
+
+            result
+                .onSuccess {
+                    // After successful refresh, get currencies again
+                    // This will emit from the database with updated data
+                    getCurrencies(forceRefresh = false)
+                    _uiState.value = _uiState.value.copy(
+                        isRefreshing = false
+                    )
+                }
+                .onError { exception, message ->
+                    _uiState.value = _uiState.value.copy(
+                        isRefreshing = false,
+                        error = message ?: exception.message ?: "Failed to refresh currencies"
+                    )
+                }
+        }
+    }
+
+    /**
+     * Get the saved conversion currency for the Quick look data
+     */
+    private fun getConversionCurrency() {
+        viewModelScope.launch(ioDispatcher) {
+            val conversionCurrency = conversionCurrencyUseCase.getSavedConversionCurrency()
+            _uiState.value = _uiState.value.copy(
+                savedConversion = conversionCurrency?.toUi()
+            )
+        }
     }
 }
+

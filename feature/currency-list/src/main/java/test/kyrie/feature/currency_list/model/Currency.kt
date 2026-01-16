@@ -1,21 +1,23 @@
 package test.kyrie.feature.currency_list.model
 
-/**
- * Represents a currency with its details
- */
+
 data class Currency(
-    val code: String,
-    val name: String,
-    val flagEmoji: String,
-    val exchangeRate: Double
+    val currencyCode: String,
+    val currencyName: String,
+    val countryName: String,
+    val countryCode: String,
+    val rateToUsd: String,
+    val iconUrl: String,
+    val isAvailable: Boolean
 )
 
 /**
- * Represents the saved currency conversion displayed in Quick Look
+ *  saved currency conversion displayed in Quick Look
  */
 data class SavedConversion(
     val fromAmount: String,
     val fromCurrency: String,
     val toAmount: String,
-    val toCurrency: String
+    val toCurrency: String,
+    val timestamp: Long = 0
 )
