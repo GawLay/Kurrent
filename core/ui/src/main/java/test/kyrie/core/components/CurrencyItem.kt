@@ -1,7 +1,6 @@
 package test.kyrie.core.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -26,12 +25,10 @@ fun CurrencyItem(
     exchangeRate: String,
     flagEmoji: String,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
             .padding(
                 horizontal = MaterialTheme.dimensions.paddingMd,
                 vertical = MaterialTheme.dimensions.paddingMd

@@ -2,7 +2,9 @@ import com.android.build.gradle.LibraryExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.artifacts.VersionCatalogsExtension
 import org.gradle.kotlin.dsl.configure
+import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
@@ -14,9 +16,14 @@ import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 class AndroidLibraryConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
+            val libs = extensions
+                .getByType<VersionCatalogsExtension>()
+                .named("libs")
+
             with(pluginManager) {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlin.plugin.compose")
             }
 
             extensions.configure<LibraryExtension> {
@@ -41,6 +48,16 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 compileOptions {
                     sourceCompatibility = JavaVersion.VERSION_17
                     targetCompatibility = JavaVersion.VERSION_17
+                }
+
+                buildFeatures {
+                    compose = true
+                }
+
+                packaging {
+                    resources {
+                        excludes += "/META-INF/gradle/incremental.annotation.processors"
+                    }
                 }
             }
 

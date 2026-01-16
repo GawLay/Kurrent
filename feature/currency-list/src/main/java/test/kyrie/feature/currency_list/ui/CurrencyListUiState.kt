@@ -1,21 +1,22 @@
 package test.kyrie.feature.currency_list.ui
 
+
 import test.kyrie.feature.currency_list.model.Currency
 import test.kyrie.feature.currency_list.model.SavedConversion
 
-/**
- * UI state for the Currency List Screen
- */
+
 data class CurrencyListUiState(
     val isLoading: Boolean = false,
     val savedConversion: SavedConversion? = null,
     val currencies: List<Currency> = emptyList(),
     val selectedCurrency: String? = null,
+    val baseCurrency: String = "USD",
+    val availableCurrencies: Map<String, String> = emptyMap(),
     val error: String? = null
 ) {
     companion object {
         /**
-         * Provides mock data for preview and testing
+         *  mock data for preview and testing
          */
         fun mockData(): CurrencyListUiState {
             return CurrencyListUiState(
@@ -25,6 +26,21 @@ data class CurrencyListUiState(
                     fromCurrency = "JPY",
                     toAmount = "0.67",
                     toCurrency = "USD"
+                ),
+                baseCurrency = "USD",
+                availableCurrencies = mapOf(
+                    "USD" to "United States Dollar",
+                    "EUR" to "Euro",
+                    "GBP" to "British Pound",
+                    "JPY" to "Japanese Yen",
+                    "CAD" to "Canadian Dollar",
+                    "AUD" to "Australian Dollar",
+                    "CNY" to "Chinese Yuan",
+                    "CHF" to "Swiss Franc",
+                    "INR" to "Indian Rupee",
+                    "KRW" to "South Korean Won",
+                    "SGD" to "Singapore Dollar",
+                    "HKD" to "Hong Kong Dollar"
                 ),
                 currencies = listOf(
                     Currency(

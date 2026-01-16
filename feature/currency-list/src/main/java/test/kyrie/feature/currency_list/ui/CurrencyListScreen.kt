@@ -1,5 +1,6 @@
 package test.kyrie.feature.currency_list.ui
 
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -35,6 +36,7 @@ import test.kyrie.core.components.SectionHeader
 import test.kyrie.core.theme.KurrentTheme
 import test.kyrie.core.theme.dimensions
 
+
 /**
  * Currency List Screen - Main entry point of the app
  * Displays list of currencies with exchange rates and a quick look card
@@ -48,6 +50,7 @@ fun CurrencyListScreen(
     onCurrencyClick: (String) -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
 
     Scaffold(
         topBar = {
@@ -87,19 +90,15 @@ fun CurrencyListScreen(
     ) { paddingValues ->
         CurrencyListContent(
             uiState = uiState,
-            onCurrencyClick = { code ->
-                viewModel.onCurrencyClick(code)
-                onCurrencyClick(code)
-            },
             modifier = Modifier.padding(paddingValues)
         )
     }
 }
 
+
 @Composable
 private fun CurrencyListContent(
     uiState: CurrencyListUiState,
-    onCurrencyClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -130,15 +129,19 @@ private fun CurrencyListContent(
                     }
                 }
 
+
                 // Section Header
                 item {
                     SectionHeader(
-                        title = "All Currencies (Currency Freak API)",
                         modifier = Modifier.padding(
                             top = MaterialTheme.dimensions.spacingSm
-                        )
+                        ),
+                        title = "All Currencies",
+                        currencyBaseTitle = uiState.baseCurrency,
+                        availableCurrencies = uiState.availableCurrencies,
                     )
                 }
+
 
                 // Currency List
                 items(
@@ -150,12 +153,12 @@ private fun CurrencyListContent(
                             currencyCode = currency.code,
                             exchangeRate = String.format("%.2f", currency.exchangeRate),
                             flagEmoji = currency.flagEmoji,
-                            onClick = { onCurrencyClick(currency.code) }
                         )
                     }
                 }
             }
         }
+
 
         // Error message
         uiState.error?.let { error ->
@@ -170,6 +173,7 @@ private fun CurrencyListContent(
     }
 }
 
+
 @Preview(showBackground = true)
 @Composable
 private fun CurrencyListScreenPreview() {
@@ -177,6 +181,7 @@ private fun CurrencyListScreenPreview() {
         CurrencyListScreen()
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

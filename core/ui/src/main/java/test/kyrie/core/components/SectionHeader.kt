@@ -1,51 +1,71 @@
 package test.kyrie.core.components
 
-import androidx.compose.foundation.layout.Column
+
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
-import test.kyrie.core.theme.KurrentTextStyles
 import test.kyrie.core.theme.dimensions
 
-/**
- * Section header for currency list
- * Displays title and optional subtitle
- */
+
 @Composable
 fun SectionHeader(
+    modifier: Modifier = Modifier,
     title: String,
-    subtitle: String? = null,
-    modifier: Modifier = Modifier
+    currencyBaseTitle: String,
+    availableCurrencies: Map<String, String> = emptyMap(),
 ) {
-    Column(
+
+    Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(
                 horizontal = MaterialTheme.dimensions.paddingMd,
                 vertical = MaterialTheme.dimensions.paddingSm
-            )
+            ),
+        verticalAlignment = Alignment.CenterVertically
+
+
     ) {
         Text(
             text = title,
+            modifier = Modifier.weight(1f),
             style = MaterialTheme.typography.titleMedium.copy(
                 fontWeight = FontWeight.Medium
             ),
             color = MaterialTheme.colorScheme.onBackground
         )
-        
-        subtitle?.let {
-            Spacer(modifier = Modifier.height(MaterialTheme.dimensions.textGapXs))
+
+
+        Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimensions.spacingSm))
+
+
+        KurrentCardView(
+            modifier = Modifier
+                .weight(1f),
+            containerColor =  MaterialTheme.colorScheme.secondary
+        ) {
             Text(
-                text = it,
-                style = KurrentTextStyles.supportingText,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
+                text = currencyBaseTitle,
+                style = MaterialTheme.typography.titleLarge.copy(
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.onSecondary
+                ),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
         }
+
+
     }
 }

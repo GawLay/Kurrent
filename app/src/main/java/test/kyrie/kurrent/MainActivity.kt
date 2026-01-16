@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import dagger.hilt.android.HiltAndroidApp
 import test.kyrie.core.theme.KurrentTheme
 import test.kyrie.feature.currency_list.ui.CurrencyListScreen
 

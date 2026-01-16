@@ -58,6 +58,12 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 buildFeatures {
                     compose = true
                 }
+
+                packaging {
+                    resources {
+                        excludes += "/META-INF/gradle/incremental.annotation.processors"
+                    }
+                }
             }
 
             extensions.configure<KotlinAndroidProjectExtension> {
