@@ -20,5 +20,6 @@ interface CurrencyRepository {
 
     suspend fun saveConversionCurrency(saveConversionDomain: SaveConversionDomain)
     suspend fun getSavedConversionCurrency(): SaveConversionDomain?
+    fun observeSavedConversionCurrency(): Flow<SaveConversionDomain?>
 }
 
