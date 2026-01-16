@@ -6,14 +6,6 @@ import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 
-/**
- * Extension functions and utilities for the Kurrent theme system
- */
-
-/**
- * Creates a subtle blue gradient for cards in dark theme
- * Returns a solid color in light theme
- */
 @Composable
 @ReadOnlyComposable
 fun cardGradientBrush(darkTheme: Boolean): Brush {
@@ -34,9 +26,6 @@ fun cardGradientBrush(darkTheme: Boolean): Brush {
     }
 }
 
-/**
- * Get elevation based on theme (less elevation in light mode for soft shadows)
- */
 @Composable
 @ReadOnlyComposable
 fun getCardElevation(darkTheme: Boolean): androidx.compose.ui.unit.Dp {
@@ -44,9 +33,6 @@ fun getCardElevation(darkTheme: Boolean): androidx.compose.ui.unit.Dp {
     return if (darkTheme) dims.elevationMd else dims.elevationSm
 }
 
-/**
- * Currency item colors based on selection state
- */
 data class CurrencyItemColors(
     val background: Color,
     val contentColor: Color,

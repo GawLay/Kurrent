@@ -11,6 +11,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -23,11 +25,13 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.EntryPointAccessors
 import test.kyrie.core.components.CurrencyItem
 import test.kyrie.core.components.KurrentCardView
 import test.kyrie.core.components.KurrentFloatingActionButton
@@ -35,6 +39,9 @@ import test.kyrie.core.components.QuickLookCard
 import test.kyrie.core.components.SectionHeader
 import test.kyrie.core.theme.KurrentTheme
 import test.kyrie.core.theme.dimensions
+import test.kyrie.core.theme.manager.ThemeManagerEntryPoint
+import test.kyrie.core.theme.manager.ThemeMode
+import test.kyrie.core.theme.manager.observeThemeMode
 import test.kyrie.feature.currency_list.model.Currency
 import test.kyrie.feature.currency_list.model.SavedConversion
 import test.kyrie.feature.util.FeatureCurrencyConstants
@@ -45,6 +52,7 @@ import test.kyrie.feature.util.FeatureCurrencyConstants
  * - Offline-first data loading
  * - Manual refresh functionality via refresh button
  * - Timer-based cache refresh (5 minutes)
+ * - Theme toggle for switching between dark and light modes
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,11 +60,22 @@ fun CurrencyListScreen(
     viewModel: CurrencyListViewModel = hiltViewModel(),
     onNavigateToCalculator: () -> Unit = {},
 ) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val themeManager = remember {
+        EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            ThemeManagerEntryPoint::class.java
+        ).themeManager()
+    }
+
     val uiState by viewModel.uiState.collectAsState()
+    val themeMode = themeManager.observeThemeMode()
 
     CurrencyListScreenContent(
         uiState = uiState,
+        themeMode = themeMode,
         onRefresh = { viewModel.refreshCurrencies() },
+        onThemeToggle = { themeManager.toggleTheme() },
         onNavigateToCalculator = onNavigateToCalculator
     )
 }
@@ -65,7 +84,9 @@ fun CurrencyListScreen(
 @Composable
 private fun CurrencyListScreenContent(
     uiState: CurrencyListUiState,
+    themeMode: ThemeMode,
     onRefresh: () -> Unit,
+    onThemeToggle: () -> Unit,
     onNavigateToCalculator: () -> Unit,
 ) {
     Scaffold(
@@ -80,6 +101,20 @@ private fun CurrencyListScreenContent(
                     )
                 },
                 actions = {
+                    // Theme toggle button
+                    IconButton(
+                        onClick = onThemeToggle
+                    ) {
+                        Icon(
+                            imageVector = if (themeMode == ThemeMode.DARK)
+                                Icons.Outlined.LightMode
+                            else
+                                Icons.Outlined.DarkMode,
+                            contentDescription = "Toggle theme"
+                        )
+                    }
+
+                    // Refresh button
                     IconButton(
                         onClick = onRefresh,
                         enabled = !uiState.isRefreshing
@@ -244,7 +279,9 @@ private fun CurrencyListScreenPreview() {
                     toCurrency = "USD"
                 )
             ),
+            themeMode = ThemeMode.DARK,
             onRefresh = {},
+            onThemeToggle = {},
             onNavigateToCalculator = {}
         )
     }
@@ -262,7 +299,9 @@ private fun CurrencyListScreenLoadingPreview() {
                 isRefreshing = false,
                 error = null
             ),
+            themeMode = ThemeMode.LIGHT,
             onRefresh = {},
+            onThemeToggle = {},
             onNavigateToCalculator = {}
         )
     }
@@ -280,7 +319,9 @@ private fun CurrencyListScreenErrorPreview() {
                 isRefreshing = false,
                 error = "Failed to load currencies"
             ),
+            themeMode = ThemeMode.LIGHT,
             onRefresh = {},
+            onThemeToggle = {},
             onNavigateToCalculator = {}
         )
     }
