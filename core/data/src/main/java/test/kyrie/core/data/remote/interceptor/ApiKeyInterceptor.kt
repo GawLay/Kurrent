@@ -15,10 +15,11 @@ class ApiKeyInterceptor @Inject constructor(
         val originalRequest = chain.request()
         val url = originalRequest.url
 
-        // Check if the request already has an apikey parameter
+        // Check if the request has an apikey parameter
         // If it does, replace it with our decrypted key
         // If it doesn't and the endpoint needs it, add it
-        val needsApiKey = url.encodedPath.contains("/rates/")
+        val needsApiKey =
+            url.encodedPath.contains("/rates/") //target specific check because we know about end point
 
         return if (needsApiKey || url.queryParameter("apikey") != null) {
             val newUrl = url.newBuilder()

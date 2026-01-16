@@ -2,12 +2,14 @@ package test.kyrie.feature.currency_list.model
 
 
 data class Currency(
-    val code: String,
-    val name: String,
-    val flagEmoji: String,
-    val exchangeRate: Double
+    val currencyCode: String,
+    val currencyName: String,
+    val countryName: String,
+    val countryCode: String,
+    val rateToUsd: String,
+    val iconUrl: String,
+    val isAvailable: Boolean
 )
-
 
 /**
  *  saved currency conversion displayed in Quick Look
@@ -17,11 +19,5 @@ data class SavedConversion(
     val fromCurrency: String,
     val toAmount: String,
     val toCurrency: String,
-    val timestamp: String = ""
-)
-
-
-data class AvailableCurrencies(
-    // like key and value
-    val currencies: Map<String, String>
+    val timestamp: Long = 0
 )

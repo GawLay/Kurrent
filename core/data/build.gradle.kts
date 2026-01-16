@@ -7,6 +7,9 @@ plugins {
 
 android {
     namespace = "test.kyrie.core.data"
+    ksp {
+        arg("room.schemaLocation", "$projectDir/schemas")
+    }
 }
 
 

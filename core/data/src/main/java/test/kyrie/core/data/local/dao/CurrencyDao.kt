@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import test.kyrie.core.data.local.entity.CurrencyEntity
+import test.kyrie.core.data.local.entity.SaveConversionEntity
 
 @Dao
 interface CurrencyDao {

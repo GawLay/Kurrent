@@ -14,7 +14,11 @@ add_library( # Sets the name of the library.
         src/main/cpp/crypto_helper.cpp
 )
 
-
+# Searches for a specified prebuilt library and stores the path as a variable
+find_library( # Sets the name of the path variable.
+        log-lib
+        # Specifies the name of the NDK library that you want CMake to locate.
+        log)
 
 target_link_libraries(
         # Specifies the target library.

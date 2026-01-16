@@ -9,23 +9,23 @@ data class SupportedCurrenciesResponseDto(
 
 data class CurrencyDto(
     @SerializedName("currencyCode")
-    val currencyCode: String,
+    val currencyCode: String?,
 
     @SerializedName("currencyName")
-    val currencyName: String,
+    val currencyName: String?,
 
     @SerializedName("countryCode")
-    val countryCode: String,
+    val countryCode: String?,
 
     @SerializedName("countryName")
-    val countryName: String,
+    val countryName: String?,
 
     @SerializedName("status")
-    val status: String,
+    val status: String?,
 
     @SerializedName("availableFrom")
-    val availableFrom: String? = null,
+    val availableFrom: String?,
 
     @SerializedName("icon")
-    val icon: String? = null
+    val icon: String?
 )

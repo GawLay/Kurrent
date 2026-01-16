@@ -19,7 +19,7 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    private const val BASE_URL = "https://api.freecurrencyapi.com/"
+    private const val BASE_URL = "https://api.currencyfreaks.com/"
     private const val TIMEOUT_SECONDS = 30L
 
     @Provides

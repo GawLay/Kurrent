@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import test.kyrie.core.data.local.dao.CurrencyDao
+import test.kyrie.core.data.local.dao.SaveConversionDao
 import test.kyrie.core.data.local.database.KurrentDatabase
 import javax.inject.Singleton
 
@@ -33,6 +34,12 @@ object DatabaseModule {
     @Singleton
     fun provideCurrencyDao(database: KurrentDatabase): CurrencyDao {
         return database.currencyDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSaveConversionCurrencyDao(database: KurrentDatabase): SaveConversionDao {
+        return database.saveConversionDao()
     }
 }
 

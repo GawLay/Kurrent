@@ -29,6 +29,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", libs.findBundle("android-ui").get())
                 add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
                 add("implementation", libs.findBundle("compose").get())
+                add("implementation", libs.findBundle("image-loading").get())
             }
 
             extensions.configure<LibraryExtension> {
