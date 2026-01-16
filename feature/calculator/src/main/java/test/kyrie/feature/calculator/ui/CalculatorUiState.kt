@@ -10,7 +10,4 @@ data class CalculatorUiState(
     val convertedAmount: String = "",
     val targetCurrency: String = "USD",
     val error: String? = null
-) {
-    val canConvert: Boolean
-        get() = selectedCurrency != null && amount.isNotEmpty() && amount.toDoubleOrNull() != null
-}
+)
