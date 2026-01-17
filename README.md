@@ -92,10 +92,11 @@ GET https://api.currencyfreaks.com/v2.0/rates/latest
 **Setup:**
 1. Sign up at [CurrencyFreaks](https://currencyfreaks.com/)
 2. Get your API key
-3. Add to `local.properties`:
-   ```properties
-   CURRENCY_API_KEY=your_api_key_here
-   ```
+3. Secure the API key (instead of storing it as plain text):
+   Convert the original API key into a byte array
+   Apply a simple XOR operation to obfuscate the key
+   Split and store the result as two byte arrays inside CryptoValue.
+   Use a JNI (NDK) method to reconstruct and reverse the XOR operation at runtime to retrieve the original API key
 
 ---
 
@@ -261,12 +262,12 @@ This project enforces strict code quality standards using **ktlint** with **Comp
 ```kotlin
 @Test
 fun `currency conversion calculates correctly`() = runTest {
-    viewModel.onAmountChange("100")
-    advanceUntilIdle()
-    
-    val state = viewModel.uiState.value
-    assertEquals("117.65", state.convertedAmount)
-}
+        viewModel.onAmountChange("100")
+        advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals("117.65", state.convertedAmount)
+    }
 ```
 
 ##  Acknowledgments
