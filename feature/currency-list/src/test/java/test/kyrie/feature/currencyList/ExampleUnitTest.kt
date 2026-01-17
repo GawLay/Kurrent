@@ -1,8 +1,7 @@
-package test.kyrie.feature.currency_list
-
-import org.junit.Test
+package test.kyrie.feature.currencyList
 
 import org.junit.Assert.*
+import org.junit.Test
 
 /**
  * Example local unit test, which will execute on the development machine (host).

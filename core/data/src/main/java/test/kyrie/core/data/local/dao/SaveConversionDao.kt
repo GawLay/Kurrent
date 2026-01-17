@@ -27,5 +27,4 @@ interface SaveConversionDao {
         deleteSavedConversions()
         insertSavedConversionCurrency(currency)
     }
-
 }

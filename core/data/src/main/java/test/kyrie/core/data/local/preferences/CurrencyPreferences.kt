@@ -7,21 +7,23 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class CurrencyPreferences @Inject constructor(
-    @ApplicationContext context: Context
-) {
-    private val prefs: SharedPreferences = context.getSharedPreferences(
-        PREFS_NAME,
-        Context.MODE_PRIVATE
-    )
+class CurrencyPreferences
+    @Inject
+    constructor(
+        @ApplicationContext context: Context,
+    ) {
+        private val prefs: SharedPreferences =
+            context.getSharedPreferences(
+                PREFS_NAME,
+                Context.MODE_PRIVATE,
+            )
 
-    var lastFetchTimestamp: Long
-        get() = prefs.getLong(KEY_LAST_FETCH_TIMESTAMP, 0L)
-        set(value) = prefs.edit().putLong(KEY_LAST_FETCH_TIMESTAMP, value).apply()
+        var lastFetchTimestamp: Long
+            get() = prefs.getLong(KEY_LAST_FETCH_TIMESTAMP, 0L)
+            set(value) = prefs.edit().putLong(KEY_LAST_FETCH_TIMESTAMP, value).apply()
 
-    companion object {
-        private const val PREFS_NAME = "currency_preferences"
-        private const val KEY_LAST_FETCH_TIMESTAMP = "last_fetch_timestamp"
+        companion object {
+            private const val PREFS_NAME = "currency_preferences"
+            private const val KEY_LAST_FETCH_TIMESTAMP = "last_fetch_timestamp"
+        }
     }
-}
-

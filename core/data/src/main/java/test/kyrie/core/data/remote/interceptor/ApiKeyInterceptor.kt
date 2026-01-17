@@ -7,38 +7,42 @@ import javax.inject.Inject
 /**
  * Interceptor to add API key to requests that require
  */
-class ApiKeyInterceptor @Inject constructor(
-    private val apiKeyProvider: ApiKeyProvider
-) : Interceptor {
+class ApiKeyInterceptor
+    @Inject
+    constructor(
+        private val apiKeyProvider: ApiKeyProvider,
+    ) : Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val originalRequest = chain.request()
+            val url = originalRequest.url
 
-    override fun intercept(chain: Interceptor.Chain): Response {
-        val originalRequest = chain.request()
-        val url = originalRequest.url
+            // Check if the request has an apikey parameter
+            // If it does, replace it with our decrypted key
+            // If it doesn't and the endpoint needs it, add it
+            val needsApiKey =
+                url.encodedPath.contains("/rates/") // target specific check because we know about end point
 
-        // Check if the request has an apikey parameter
-        // If it does, replace it with our decrypted key
-        // If it doesn't and the endpoint needs it, add it
-        val needsApiKey =
-            url.encodedPath.contains("/rates/") //target specific check because we know about end point
+            return if (needsApiKey || url.queryParameter("apikey") != null) {
+                val newUrl =
+                    url
+                        .newBuilder()
+                        .removeAllQueryParameters("apikey")
+                        .addQueryParameter("apikey", apiKeyProvider.getApiKey())
+                        .build()
 
-        return if (needsApiKey || url.queryParameter("apikey") != null) {
-            val newUrl = url.newBuilder()
-                .removeAllQueryParameters("apikey")
-                .addQueryParameter("apikey", apiKeyProvider.getApiKey())
-                .build()
+                val newRequest =
+                    originalRequest
+                        .newBuilder()
+                        .url(newUrl)
+                        .build()
 
-            val newRequest = originalRequest.newBuilder()
-                .url(newUrl)
-                .build()
-
-            chain.proceed(newRequest)
-        } else {
-            chain.proceed(originalRequest)
+                chain.proceed(newRequest)
+            } else {
+                chain.proceed(originalRequest)
+            }
         }
     }
-}
 
 interface ApiKeyProvider {
     fun getApiKey(): String
 }
-

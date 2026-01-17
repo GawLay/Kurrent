@@ -6,7 +6,6 @@ android {
     namespace = "test.kyrie.kurrent"
 }
 
-
 dependencies {
     implementation(project(":core:ui"))
     implementation(project(":core:data"))

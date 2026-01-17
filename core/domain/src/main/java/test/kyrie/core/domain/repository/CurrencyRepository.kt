@@ -6,7 +6,6 @@ import test.kyrie.core.domain.model.SaveConversionDomain
 import test.kyrie.core.domain.util.Result
 
 interface CurrencyRepository {
-
     /**
      * Fetches all currencies  by calling both getSupportedCurrencies
      * and getLatestRates APIs in parallel,.
@@ -19,7 +18,8 @@ interface CurrencyRepository {
     suspend fun refreshCurrencies(): Result<Unit>
 
     suspend fun saveConversionCurrency(saveConversionDomain: SaveConversionDomain)
+
     suspend fun getSavedConversionCurrency(): SaveConversionDomain?
+
     fun observeSavedConversionCurrency(): Flow<SaveConversionDomain?>
 }
-

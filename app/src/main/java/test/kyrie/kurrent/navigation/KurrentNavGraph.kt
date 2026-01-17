@@ -5,10 +5,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import test.kyrie.feature.calculator.ui.CalculatorScreen
-import test.kyrie.feature.currency_list.ui.CurrencyListScreen
+import test.kyrie.feature.currencyList.ui.CurrencyListScreen
 
-sealed class Screen(val route: String) {
+sealed class Screen(
+    val route: String,
+) {
     object CurrencyList : Screen("currency_list")
+
     object Calculator : Screen("calculator")
 }
 
@@ -18,13 +21,13 @@ fun KurrentNavGraph() {
 
     NavHost(
         navController = navController,
-        startDestination = Screen.CurrencyList.route
+        startDestination = Screen.CurrencyList.route,
     ) {
         composable(Screen.CurrencyList.route) {
             CurrencyListScreen(
                 onNavigateToCalculator = {
                     navController.navigate(Screen.Calculator.route)
-                }
+                },
             )
         }
 
@@ -32,7 +35,7 @@ fun KurrentNavGraph() {
             CalculatorScreen(
                 onNavigateBack = {
                     navController.popBackStack()
-                }
+                },
             )
         }
     }

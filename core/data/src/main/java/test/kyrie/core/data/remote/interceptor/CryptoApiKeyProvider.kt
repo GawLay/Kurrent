@@ -7,9 +7,8 @@ import javax.inject.Inject
  * Implementation of ApiKeyProvider
  * that uses CryptoHelperBridge to decrypt the API key.
  */
-class CryptoApiKeyProvider @Inject constructor() : ApiKeyProvider {
-    override fun getApiKey(): String {
-        return CryptoHelperBridge.getDecryptedApiKey()
+class CryptoApiKeyProvider
+    @Inject
+    constructor() : ApiKeyProvider {
+        override fun getApiKey(): String = CryptoHelperBridge.getDecryptedApiKey()
     }
-}
-

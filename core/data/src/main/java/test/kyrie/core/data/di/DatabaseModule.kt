@@ -15,31 +15,24 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
     @Provides
     @Singleton
     fun provideKurrentDatabase(
-        @ApplicationContext context: Context
-    ): KurrentDatabase {
-        return Room.databaseBuilder(
-            context,
-            KurrentDatabase::class.java,
-            KurrentDatabase.DATABASE_NAME
-        )
-            .fallbackToDestructiveMigration(dropAllTables = true)
+        @ApplicationContext context: Context,
+    ): KurrentDatabase =
+        Room
+            .databaseBuilder(
+                context,
+                KurrentDatabase::class.java,
+                KurrentDatabase.DATABASE_NAME,
+            ).fallbackToDestructiveMigration(dropAllTables = true)
             .build()
-    }
 
     @Provides
     @Singleton
-    fun provideCurrencyDao(database: KurrentDatabase): CurrencyDao {
-        return database.currencyDao()
-    }
+    fun provideCurrencyDao(database: KurrentDatabase): CurrencyDao = database.currencyDao()
 
     @Provides
     @Singleton
-    fun provideSaveConversionCurrencyDao(database: KurrentDatabase): SaveConversionDao {
-        return database.saveConversionDao()
-    }
+    fun provideSaveConversionCurrencyDao(database: KurrentDatabase): SaveConversionDao = database.saveConversionDao()
 }
-

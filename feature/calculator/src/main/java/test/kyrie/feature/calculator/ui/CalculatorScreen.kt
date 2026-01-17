@@ -51,12 +51,12 @@ import coil3.compose.AsyncImage
 import test.kyrie.core.components.KurrentCardView
 import test.kyrie.core.theme.KurrentTextStyles
 import test.kyrie.core.theme.KurrentTheme
+import test.kyrie.core.theme.KurrentTypography
 import test.kyrie.core.theme.dimensions
 import test.kyrie.feature.calculator.model.Currency
 import java.util.Locale
 
 /**
- * Calculator screen for currency conversion
  * - Target currency is always USD
  * - Conversion results are saved to DB for quick look
  * - On first launch, displays index 0 currency
@@ -66,15 +66,15 @@ import java.util.Locale
 @Composable
 fun CalculatorScreen(
     viewModel: CalculatorViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit = {}
+    onNavigateBack: () -> Unit = {},
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
     CalculatorScreenContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
-        onCurrencySelected = viewModel::onCurrencySelected,
-        onAmountChanged = viewModel::onAmountChanged,
+        onCurrencySelect = viewModel::onCurrencySelected,
+        onAmountChange = viewModel::onAmountChange,
     )
 }
 
@@ -83,8 +83,8 @@ fun CalculatorScreen(
 private fun CalculatorScreenContent(
     uiState: CalculatorUiState,
     onNavigateBack: () -> Unit,
-    onCurrencySelected: (Currency) -> Unit,
-    onAmountChanged: (String) -> Unit,
+    onCurrencySelect: (Currency) -> Unit,
+    onAmountChange: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -92,166 +92,70 @@ private fun CalculatorScreenContent(
                 title = {
                     Text(
                         text = "Currency Calculator",
-                        style = MaterialTheme.typography.titleLarge.copy(
-                            fontWeight = FontWeight.Medium
-                        )
+                        style =
+                            KurrentTypography.titleLarge.copy(
+                                fontWeight = FontWeight.Medium,
+                            ),
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = onNavigateBack) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Navigate back"
+                            contentDescription = "Navigate back",
                         )
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.background,
-                    titleContentColor = MaterialTheme.colorScheme.onBackground
-                )
+                colors =
+                    TopAppBarDefaults.topAppBarColors(
+                        containerColor = MaterialTheme.colorScheme.background,
+                        titleContentColor = MaterialTheme.colorScheme.onBackground,
+                    ),
             )
-        }
+        },
     ) { paddingValues ->
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
         ) {
             if (uiState.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
+                    modifier = Modifier.align(Alignment.Center),
                 )
             } else {
                 Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .verticalScroll(rememberScrollState())
-                        .padding(
-                            horizontal = MaterialTheme.dimensions.screenPaddingHorizontal,
-                            vertical = MaterialTheme.dimensions.screenPaddingVertical
-                        ),
-                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingLg)
+                    modifier =
+                        Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
+                            .padding(
+                                horizontal = MaterialTheme.dimensions.screenPaddingHorizontal,
+                                vertical = MaterialTheme.dimensions.screenPaddingVertical,
+                            ),
+                    verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingLg),
                 ) {
                     // Amount Input Section
-                    KurrentCardView(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(MaterialTheme.dimensions.cardPadding),
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd)
-                        ) {
-                            Text(
-                                text = "Amount",
-                                style = KurrentTextStyles.sectionTitle,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-
-                            // Currency Selector
-                            uiState.selectedCurrency?.let { currency ->
-                                CurrencySelector(
-                                    selectedCurrency = currency,
-                                    currencies = uiState.currencies,
-                                    onCurrencySelected = onCurrencySelected
-                                )
-                            }
-
-                            // Amount Input
-                            OutlinedTextField(
-                                value = uiState.amount,
-                                onValueChange = onAmountChanged,
-                                modifier = Modifier.fillMaxWidth(),
-                                label = { Text("Enter amount") },
-                                keyboardOptions = KeyboardOptions(
-                                    keyboardType = KeyboardType.Decimal
-                                ),
-                                singleLine = true,
-                                textStyle = MaterialTheme.typography.headlineMedium.copy(
-                                    fontWeight = FontWeight.Bold
-                                )
-                            )
-                        }
-                    }
+                    AmountInputCard(
+                        selectedCurrency = uiState.selectedCurrency,
+                        currencies = uiState.currencies,
+                        amount = uiState.amount,
+                        onCurrencySelect = onCurrencySelect,
+                        onAmountChange = onAmountChange,
+                    )
 
                     // Conversion Result Section
-                    KurrentCardView(
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(MaterialTheme.dimensions.cardPadding),
-                            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd)
-                        ) {
-                            Text(
-                                text = "Converted Amount",
-                                style = KurrentTextStyles.sectionTitle,
-                                color = MaterialTheme.colorScheme.onPrimaryContainer
-                            )
-
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(
-                                    MaterialTheme.dimensions.spacingMd
-                                ),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                // USD Flag/Icon - Placeholder
-                                Text(
-                                    text = "🇺🇸",
-                                    style = MaterialTheme.typography.displaySmall,
-                                    modifier = Modifier.size(48.dp)
-                                )
-
-                                Column(
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text(
-                                        text = uiState.targetCurrency,
-                                        style = KurrentTextStyles.currencyCode,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                                    )
-                                    Text(
-                                        text = "United States Dollar",
-                                        style = KurrentTextStyles.currencyName,
-                                        color = MaterialTheme.colorScheme.onPrimaryContainer.copy(
-                                            alpha = 0.7f
-                                        )
-                                    )
-                                }
-                            }
-
-                            Text(
-                                text = uiState.convertedAmount.ifEmpty {
-                                    "0.00"
-                                },
-                                style = MaterialTheme.typography.displayLarge.copy(
-                                    fontWeight = FontWeight.Bold
-                                ),
-                                color = MaterialTheme.colorScheme.onPrimaryContainer,
-                                modifier = Modifier.fillMaxWidth(),
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
+                    ConversionResultCard(
+                        targetCurrency = uiState.targetCurrency,
+                        convertedAmount = uiState.convertedAmount,
+                    )
 
                     // Exchange Rate Info
                     uiState.selectedCurrency?.let { currency ->
-                        Text(
-                            text = "Indicative Exchange Rate\n1 ${currency.currencyCode} = ${
-                                if (currency.rateToUsd.toDoubleOrNull() != null) {
-                                    String.format(
-                                        Locale.ENGLISH,
-                                        "%.4f",
-                                        1 / currency.rateToUsd.toDouble()
-                                    )
-                                } else "0"
-                            } ${uiState.targetCurrency}",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                        ExchangeRateInfo(
+                            currency = currency,
+                            targetCurrency = uiState.targetCurrency,
                         )
                     }
 
@@ -260,7 +164,7 @@ private fun CalculatorScreenContent(
                         Text(
                             text = error,
                             color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.padding(MaterialTheme.dimensions.paddingMd)
+                            modifier = Modifier.padding(MaterialTheme.dimensions.paddingMd),
                         )
                     }
                 }
@@ -270,53 +174,200 @@ private fun CalculatorScreenContent(
 }
 
 @Composable
+private fun AmountInputCard(
+    selectedCurrency: Currency?,
+    currencies: List<Currency>,
+    amount: String,
+    onCurrencySelect: (Currency) -> Unit,
+    onAmountChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    KurrentCardView(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.dimensions.cardPadding),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
+        ) {
+            Text(
+                text = "Amount",
+                style = KurrentTextStyles.sectionTitle,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+
+            // Currency Selector
+            selectedCurrency?.let { currency ->
+                CurrencySelector(
+                    selectedCurrency = currency,
+                    currencies = currencies,
+                    onCurrencySelect = onCurrencySelect,
+                )
+            }
+
+            // Amount Input
+            OutlinedTextField(
+                value = amount,
+                onValueChange = onAmountChange,
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text("Enter amount") },
+                keyboardOptions =
+                    KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                    ),
+                singleLine = true,
+                textStyle = KurrentTextStyles.inputAmount,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ConversionResultCard(
+    targetCurrency: String,
+    convertedAmount: String,
+    modifier: Modifier = Modifier,
+) {
+    KurrentCardView(
+        modifier = modifier.fillMaxWidth(),
+    ) {
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.dimensions.cardPadding),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
+        ) {
+            Text(
+                text = "Converted Amount",
+                style = KurrentTextStyles.sectionTitle,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement =
+                    Arrangement.spacedBy(
+                        MaterialTheme.dimensions.spacingMd,
+                    ),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                // USD Flag/Icon - Placeholder
+                Text(
+                    text = "🇺🇸",
+                    style = KurrentTypography.displaySmall,
+                    modifier = Modifier.size(48.dp),
+                )
+
+                Column(
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text(
+                        text = targetCurrency,
+                        style = KurrentTextStyles.currencyCode,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                    Text(
+                        text = "United States Dollar",
+                        style = KurrentTextStyles.currencyName,
+                        color =
+                            MaterialTheme.colorScheme.onPrimaryContainer.copy(
+                                alpha = 0.7f,
+                            ),
+                    )
+                }
+            }
+
+            Text(
+                text =
+                    convertedAmount.ifEmpty {
+                        "0.00"
+                    },
+                style = KurrentTextStyles.conversionResult,
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+            )
+        }
+    }
+}
+
+@Composable
+private fun ExchangeRateInfo(
+    currency: Currency,
+    targetCurrency: String,
+    modifier: Modifier = Modifier,
+) {
+    Text(
+        text = "Indicative Exchange Rate\n1 ${currency.currencyCode} = ${
+            if (currency.rateToUsd.toDoubleOrNull() != null) {
+                String.format(
+                    Locale.ENGLISH,
+                    "%.4f",
+                    1 / currency.rateToUsd.toDouble(),
+                )
+            } else {
+                "0"
+            }
+        } $targetCurrency",
+        style = KurrentTypography.bodyMedium,
+        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+        textAlign = TextAlign.Center,
+        modifier = modifier.fillMaxWidth(),
+    )
+}
+
+@Composable
 private fun CurrencySelector(
     selectedCurrency: Currency,
     currencies: List<Currency>,
-    onCurrencySelected: (Currency) -> Unit,
-    modifier: Modifier = Modifier
+    onCurrencySelect: (Currency) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
     Box(modifier = modifier.fillMaxWidth()) {
         TextButton(
             onClick = { showDialog = true },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     // Currency Icon
                     AsyncImage(
                         model = selectedCurrency.iconUrl,
                         contentDescription = selectedCurrency.currencyName,
-                        modifier = Modifier.size(40.dp)
+                        modifier = Modifier.size(40.dp),
                     )
 
                     Column {
                         Text(
                             text = selectedCurrency.currencyCode,
-                            style = MaterialTheme.typography.titleLarge.copy(
-                                fontWeight = FontWeight.Bold
-                            )
+                            style =
+                                KurrentTypography.titleLarge.copy(
+                                    fontWeight = FontWeight.Medium,
+                                ),
                         )
                         Text(
                             text = selectedCurrency.currencyName,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            style = KurrentTypography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                         )
                     }
                 }
 
                 Icon(
                     imageVector = Icons.Default.ArrowDropDown,
-                    contentDescription = "Select currency"
+                    contentDescription = "Select currency",
                 )
             }
         }
@@ -324,11 +375,11 @@ private fun CurrencySelector(
         if (showDialog) {
             CurrencyPickerDialog(
                 currencies = currencies,
-                onCurrencySelected = { currency ->
-                    onCurrencySelected(currency)
+                onCurrencySelect = { currency ->
+                    onCurrencySelect(currency)
                     showDialog = false
                 },
-                onDismiss = { showDialog = false }
+                onDismiss = { showDialog = false },
             )
         }
     }
@@ -337,37 +388,39 @@ private fun CurrencySelector(
 @Composable
 private fun CurrencyPickerDialog(
     currencies: List<Currency>,
-    onCurrencySelected: (Currency) -> Unit,
-    onDismiss: () -> Unit
+    onCurrencySelect: (Currency) -> Unit,
+    onDismiss: () -> Unit,
 ) {
     var searchQuery by remember { mutableStateOf("") }
 
-    val filteredCurrencies = remember(searchQuery, currencies) {
-        if (searchQuery.isBlank()) {
-            currencies
-        } else {
-            currencies.filter { currency ->
-                currency.currencyCode.contains(searchQuery, ignoreCase = true) ||
+    val filteredCurrencies =
+        remember(searchQuery, currencies) {
+            if (searchQuery.isBlank()) {
+                currencies
+            } else {
+                currencies.filter { currency ->
+                    currency.currencyCode.contains(searchQuery, ignoreCase = true) ||
                         currency.currencyName.contains(searchQuery, ignoreCase = true) ||
                         currency.countryName.contains(searchQuery, ignoreCase = true)
+                }
             }
         }
-    }
 
     AlertDialog(
         onDismissRequest = onDismiss,
         title = {
             Text(
                 text = "Select Currency",
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold
-                )
+                style =
+                    KurrentTypography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
             )
         },
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd)
+                verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
             ) {
                 // Search field
                 OutlinedTextField(
@@ -378,7 +431,7 @@ private fun CurrencyPickerDialog(
                     leadingIcon = {
                         Icon(
                             imageVector = Icons.Default.Search,
-                            contentDescription = "Search"
+                            contentDescription = "Search",
                         )
                     },
                     trailingIcon = {
@@ -386,34 +439,36 @@ private fun CurrencyPickerDialog(
                             IconButton(onClick = { searchQuery = "" }) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
-                                    contentDescription = "Clear search"
+                                    contentDescription = "Clear search",
                                 )
                             }
                         }
                     },
                     singleLine = true,
-                    shape = RoundedCornerShape(MaterialTheme.dimensions.cardRadius)
+                    shape = RoundedCornerShape(MaterialTheme.dimensions.cardRadius),
                 )
 
                 // Currency list with LazyColumn for performance
                 LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f, fill = false)
+                    modifier =
+                        Modifier
+                            .fillMaxWidth()
+                            .weight(1f, fill = false),
                 ) {
                     items(
                         items = filteredCurrencies,
-                        key = { it.currencyCode }
+                        key = { it.currencyCode },
                     ) { currency ->
                         CurrencyItem(
                             currency = currency,
-                            onClick = { onCurrencySelected(currency) }
+                            onClick = { onCurrencySelect(currency) },
                         )
                         if (currency != filteredCurrencies.last()) {
                             HorizontalDivider(
-                                modifier = Modifier.padding(
-                                    horizontal = MaterialTheme.dimensions.spacingMd
-                                )
+                                modifier =
+                                    Modifier.padding(
+                                        horizontal = MaterialTheme.dimensions.spacingMd,
+                                    ),
                             )
                         }
                     }
@@ -422,12 +477,13 @@ private fun CurrencyPickerDialog(
                 if (filteredCurrencies.isEmpty()) {
                     Text(
                         text = "No currencies found",
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = KurrentTypography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(MaterialTheme.dimensions.spacingLg),
-                        textAlign = TextAlign.Center
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .padding(MaterialTheme.dimensions.spacingLg),
+                        textAlign = TextAlign.Center,
                     )
                 }
             }
@@ -436,45 +492,47 @@ private fun CurrencyPickerDialog(
             TextButton(onClick = onDismiss) {
                 Text("Cancel")
             }
-        }
+        },
     )
 }
 
 @Composable
 private fun CurrencyItem(
     currency: Currency,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(
-                horizontal = MaterialTheme.dimensions.spacingMd,
-                vertical = MaterialTheme.dimensions.spacingSm
-            ),
+        modifier =
+            Modifier
+                .fillMaxWidth()
+                .clickable(onClick = onClick)
+                .padding(
+                    horizontal = MaterialTheme.dimensions.spacingMd,
+                    vertical = MaterialTheme.dimensions.spacingSm,
+                ),
         horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             model = currency.iconUrl,
             contentDescription = currency.currencyName,
-            modifier = Modifier.size(40.dp)
+            modifier = Modifier.size(40.dp),
         )
         Column(
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f),
         ) {
             Text(
                 text = currency.currencyCode,
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                color = MaterialTheme.colorScheme.onSurface
+                style =
+                    KurrentTypography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                    ),
+                color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
                 text = currency.currencyName,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                style = KurrentTypography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
             )
         }
     }
@@ -485,44 +543,47 @@ private fun CurrencyItem(
 private fun CalculatorScreenPreview() {
     KurrentTheme(darkTheme = true) {
         CalculatorScreenContent(
-            uiState = CalculatorUiState(
-                isLoading = false,
-                currencies = listOf(
-                    Currency(
-                        currencyCode = "SGD",
-                        currencyName = "Singapore Dollar",
-                        countryName = "Singapore",
-                        countryCode = "SG",
-                        rateToUsd = "1.35",
-                        iconUrl = "https://flagcdn.com/w320/sg.png",
-                        isAvailable = true
-                    ),
-                    Currency(
-                        currencyCode = "EUR",
-                        currencyName = "Euro",
-                        countryName = "European Union",
-                        countryCode = "EU",
-                        rateToUsd = "0.92",
-                        iconUrl = "https://flagcdn.com/w320/eu.png",
-                        isAvailable = true
-                    )
+            uiState =
+                CalculatorUiState(
+                    isLoading = false,
+                    currencies =
+                        listOf(
+                            Currency(
+                                currencyCode = "SGD",
+                                currencyName = "Singapore Dollar",
+                                countryName = "Singapore",
+                                countryCode = "SG",
+                                rateToUsd = "1.35",
+                                iconUrl = "https://flagcdn.com/w320/sg.png",
+                                isAvailable = true,
+                            ),
+                            Currency(
+                                currencyCode = "EUR",
+                                currencyName = "Euro",
+                                countryName = "European Union",
+                                countryCode = "EU",
+                                rateToUsd = "0.92",
+                                iconUrl = "https://flagcdn.com/w320/eu.png",
+                                isAvailable = true,
+                            ),
+                        ),
+                    selectedCurrency =
+                        Currency(
+                            currencyCode = "SGD",
+                            currencyName = "Singapore Dollar",
+                            countryName = "Singapore",
+                            countryCode = "SG",
+                            rateToUsd = "1.35",
+                            iconUrl = "https://flagcdn.com/w320/sg.png",
+                            isAvailable = true,
+                        ),
+                    amount = "1000.00",
+                    convertedAmount = "740.74",
+                    targetCurrency = "USD",
                 ),
-                selectedCurrency = Currency(
-                    currencyCode = "SGD",
-                    currencyName = "Singapore Dollar",
-                    countryName = "Singapore",
-                    countryCode = "SG",
-                    rateToUsd = "1.35",
-                    iconUrl = "https://flagcdn.com/w320/sg.png",
-                    isAvailable = true
-                ),
-                amount = "1000.00",
-                convertedAmount = "740.74",
-                targetCurrency = "USD"
-            ),
             onNavigateBack = {},
-            onCurrencySelected = {},
-            onAmountChanged = {},
+            onCurrencySelect = {},
+            onAmountChange = {},
         )
     }
 }
@@ -534,8 +595,62 @@ private fun CalculatorScreenLoadingPreview() {
         CalculatorScreenContent(
             uiState = CalculatorUiState(isLoading = true),
             onNavigateBack = {},
-            onCurrencySelected = {},
-            onAmountChanged = {},
+            onCurrencySelect = {},
+            onAmountChange = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Amount Input Card")
+@Composable
+private fun AmountInputCardPreview() {
+    KurrentTheme(darkTheme = true) {
+        AmountInputCard(
+            selectedCurrency =
+                Currency(
+                    currencyCode = "SGD",
+                    currencyName = "Singapore Dollar",
+                    countryName = "Singapore",
+                    countryCode = "SG",
+                    rateToUsd = "1.35",
+                    iconUrl = "https://flagcdn.com/w320/sg.png",
+                    isAvailable = true,
+                ),
+            currencies = emptyList(),
+            amount = "1000.00",
+            onCurrencySelect = {},
+            onAmountChange = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Conversion Result Card")
+@Composable
+private fun ConversionResultCardPreview() {
+    KurrentTheme(darkTheme = true) {
+        ConversionResultCard(
+            targetCurrency = "USD",
+            convertedAmount = "740.74",
+        )
+    }
+}
+
+@Preview(showBackground = true, name = "Exchange Rate Info")
+@Composable
+private fun ExchangeRateInfoPreview() {
+    KurrentTheme(darkTheme = false) {
+        ExchangeRateInfo(
+            currency =
+                Currency(
+                    currencyCode = "EUR",
+                    currencyName = "Euro",
+                    countryName = "European Union",
+                    countryCode = "EU",
+                    rateToUsd = "0.92",
+                    iconUrl = "https://flagcdn.com/w320/eu.png",
+                    isAvailable = true,
+                ),
+            targetCurrency = "USD",
         )
     }
 }

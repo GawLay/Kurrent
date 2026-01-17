@@ -7,11 +7,9 @@ import androidx.room.Query
 import androidx.room.Transaction
 import kotlinx.coroutines.flow.Flow
 import test.kyrie.core.data.local.entity.CurrencyEntity
-import test.kyrie.core.data.local.entity.SaveConversionEntity
 
 @Dao
 interface CurrencyDao {
-
     @Query("SELECT * FROM currencies ORDER BY code ASC")
     fun observeAllCurrencies(): Flow<List<CurrencyEntity>>
 
@@ -43,4 +41,3 @@ interface CurrencyDao {
     @Query("SELECT COUNT(*) FROM currencies")
     suspend fun getCurrencyCount(): Int
 }
-

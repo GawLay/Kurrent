@@ -13,6 +13,5 @@ data class CurrencyEntity(
     val rateToUsd: String,
     val iconUrl: String,
     val isAvailable: Boolean,
-    val lastUpdated: Long = System.currentTimeMillis()
+    val lastUpdated: Long = System.currentTimeMillis(),
 )
-

@@ -10,14 +10,14 @@ import test.kyrie.core.data.local.entity.SaveConversionEntity
 @Database(
     entities = [CurrencyEntity::class, SaveConversionEntity::class],
     version = 1,
-    exportSchema = true
+    exportSchema = true,
 )
 abstract class KurrentDatabase : RoomDatabase() {
     abstract fun currencyDao(): CurrencyDao
+
     abstract fun saveConversionDao(): SaveConversionDao
 
     companion object {
         const val DATABASE_NAME = "kurrent_database"
     }
 }
-

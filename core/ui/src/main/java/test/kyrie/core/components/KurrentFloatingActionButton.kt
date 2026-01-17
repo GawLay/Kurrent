@@ -17,7 +17,7 @@ fun KurrentFloatingActionButton(
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = MaterialTheme.colorScheme.onPrimary,
     elevation: FloatingActionButtonElevation = FloatingActionButtonDefaults.elevation(),
-    content: @Composable () -> Unit
+    content: @Composable () -> Unit,
 ) {
     FloatingActionButton(
         onClick = onClick,
@@ -26,7 +26,6 @@ fun KurrentFloatingActionButton(
         containerColor = containerColor,
         contentColor = contentColor,
         elevation = elevation,
-        content = content
+        content = content,
     )
 }
-

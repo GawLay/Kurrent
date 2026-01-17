@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import coil3.compose.AsyncImage
+import test.kyrie.core.theme.KurrentTextStyles
 import test.kyrie.core.theme.KurrentTheme
 import test.kyrie.core.theme.dimensions
 
@@ -31,76 +32,87 @@ fun CurrencyItem(
     modifier: Modifier = Modifier,
 ) {
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = MaterialTheme.dimensions.paddingMd,
-                vertical = MaterialTheme.dimensions.paddingMd
-            ),
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = MaterialTheme.dimensions.paddingMd,
+                    vertical = MaterialTheme.dimensions.paddingMd,
+                ),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             AsyncImage(
                 model = iconUrl,
                 contentDescription = "$currencyCode flag",
                 placeholder = rememberVectorPainter(Icons.Default.Flag),
                 error = rememberVectorPainter(Icons.Default.ErrorOutline),
-                modifier = Modifier
-                    .size(MaterialTheme.dimensions.currencyFlagSize)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.surfaceVariant)
+                modifier =
+                    Modifier
+                        .size(MaterialTheme.dimensions.currencyFlagSize)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.surfaceVariant),
             )
 
             // Currency code
             Text(
-                text = currencyCode, style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Medium
-                ), color = MaterialTheme.colorScheme.onSurface
+                text = currencyCode,
+                style =
+                    KurrentTextStyles.currencyCode.copy(
+                        fontWeight = FontWeight.Medium,
+                    ),
+                color = MaterialTheme.colorScheme.onSurface,
             )
         }
 
         // Exchange rate
         Text(
-            text = exchangeRate, style = MaterialTheme.typography.bodyLarge.copy(
-                fontWeight = FontWeight.Normal
-            ), color = MaterialTheme.colorScheme.onSurfaceVariant
+            text = exchangeRate,
+            style =
+                KurrentTextStyles.currencyAmount.copy(
+                    fontWeight = FontWeight.Normal,
+                ),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }
 
-
 private const val PREVIEW_ICON_URL =
     "https://d-cb.jc-cdn.com/sites/crackberry.com/files/topic_images/2013/ANDROID.png"
 
-
 @Preview(
-    name = "Currency Item – Light", showBackground = false
+    name = "Currency Item – Light",
+    showBackground = false,
 )
-
 @Composable
 private fun CurrencyItemPreviewLight() {
     KurrentTheme(darkTheme = false) {
         KurrentCardView {
             CurrencyItem(
-                currencyCode = "USD", exchangeRate = "148.50", iconUrl = PREVIEW_ICON_URL
+                currencyCode = "USD",
+                exchangeRate = "148.50",
+                iconUrl = PREVIEW_ICON_URL,
             )
         }
     }
 }
 
 @Preview(
-    name = "Currency Item – Dark", showBackground = false
+    name = "Currency Item – Dark",
+    showBackground = false,
 )
 @Composable
 private fun CurrencyItemPreviewDark() {
     KurrentTheme(darkTheme = true) {
         KurrentCardView {
             CurrencyItem(
-                currencyCode = "JPY", exchangeRate = "0.67", iconUrl = PREVIEW_ICON_URL
+                currencyCode = "JPY",
+                exchangeRate = "0.67",
+                iconUrl = PREVIEW_ICON_URL,
             )
         }
     }
