@@ -15,7 +15,7 @@ dependencies {
 //    implementation(libs.bundles.hilt)
 //    ksp(libs.hilt.compiler)
 //    implementation(libs.bundles.coroutines)
-    
+
 //    implementation(libs.bundles.android.ui)
 //    implementation(platform(libs.androidx.compose.bom))
 //    implementation(libs.bundles.compose)

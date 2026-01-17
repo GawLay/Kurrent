@@ -19,19 +19,20 @@ fun KurrentCardView(
     containerColor: Color = MaterialTheme.colorScheme.primaryContainer,
     contentColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
     elevation: Dp = MaterialTheme.dimensions.elevationSm,
-    content: @Composable ColumnScope.() -> Unit
+    content: @Composable ColumnScope.() -> Unit,
 ) {
     Card(
         modifier = modifier,
         shape = shape,
-        colors = CardDefaults.cardColors(
-            containerColor = containerColor,
-            contentColor = contentColor
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = elevation
-        ),
-        content = content
+        colors =
+            CardDefaults.cardColors(
+                containerColor = containerColor,
+                contentColor = contentColor,
+            ),
+        elevation =
+            CardDefaults.cardElevation(
+                defaultElevation = elevation,
+            ),
+        content = content,
     )
 }
-

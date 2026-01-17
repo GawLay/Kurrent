@@ -10,6 +10,7 @@ dependencies {
     compileOnly(libs.compose.gradlePlugin)
     compileOnly(libs.ksp.gradlePlugin)
     compileOnly(libs.hilt.gradlePlugin)
+    compileOnly(libs.ktlint.gradlePlugin)
 }
 
 gradlePlugin {
@@ -25,6 +26,10 @@ gradlePlugin {
         register("androidLibraryConvention") {
             id = "kurrent.android.library"
             implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("ktlintConvention") {
+            id = "kurrent.ktlint"
+            implementationClass = "KtlintConventionPlugin"
         }
     }
 }

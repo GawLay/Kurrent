@@ -7,5 +7,5 @@ data class Currency(
     val countryCode: String,
     val rateToUsd: String,
     val iconUrl: String,
-    val isAvailable: Boolean
+    val isAvailable: Boolean,
 )

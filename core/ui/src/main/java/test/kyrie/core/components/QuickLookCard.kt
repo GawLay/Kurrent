@@ -27,55 +27,59 @@ fun QuickLookCard(
     fromCurrency: String,
     toAmount: String,
     toCurrency: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     KurrentCardView(
-        modifier = modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(MaterialTheme.dimensions.cardPadding),
-            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd)
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(MaterialTheme.dimensions.cardPadding),
+            verticalArrangement = Arrangement.spacedBy(MaterialTheme.dimensions.spacingMd),
         ) {
             // Title
             Text(
                 text = "Quick Look",
-                style = KurrentTextStyles.sectionTitle.copy(
-                    fontWeight = FontWeight.SemiBold
-                ),
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                style =
+                    KurrentTextStyles.sectionTitle.copy(
+                        fontWeight = FontWeight.SemiBold,
+                    ),
+                color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
 
             // Conversion display
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 // From currency
                 Text(
                     text = "$fromAmount $fromCurrency",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    style =
+                        KurrentTextStyles.currencyAmount.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
 
                 // Arrow icon
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                     contentDescription = "converts to",
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                 )
 
                 // To currency
                 Text(
                     text = "$toAmount $toCurrency",
-                    style = MaterialTheme.typography.headlineSmall.copy(
-                        fontWeight = FontWeight.Bold
-                    ),
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    style =
+                        KurrentTextStyles.currencyAmount.copy(
+                            fontWeight = FontWeight.Bold,
+                        ),
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                 )
             }
 
@@ -83,7 +87,7 @@ fun QuickLookCard(
             Text(
                 text = "Saved Currency",
                 style = KurrentTextStyles.supportingText,
-                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f)
+                color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.8f),
             )
         }
     }

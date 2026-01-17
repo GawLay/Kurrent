@@ -24,6 +24,7 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.android")
                 apply("com.google.devtools.ksp")
                 apply("com.google.dagger.hilt.android")
+                apply("kurrent.ktlint")
             }
 
             dependencies {

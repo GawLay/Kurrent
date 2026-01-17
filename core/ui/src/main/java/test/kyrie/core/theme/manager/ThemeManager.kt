@@ -7,25 +7,28 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThemeManager @Inject constructor(
-    private val themePreferences: ThemePreferences
-) {
-    private val _themeMode = MutableStateFlow(themePreferences.getThemeMode())
-    val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
+class ThemeManager
+    @Inject
+    constructor(
+        private val themePreferences: ThemePreferences,
+    ) {
+        private val _themeMode = MutableStateFlow(themePreferences.getThemeMode())
+        val themeMode: StateFlow<ThemeMode> = _themeMode.asStateFlow()
 
-    fun toggleTheme() {
-        val newMode = when (_themeMode.value) {
-            ThemeMode.LIGHT -> ThemeMode.DARK
-            ThemeMode.DARK -> ThemeMode.LIGHT
-            ThemeMode.SYSTEM -> ThemeMode.DARK // If system, switch to dark
+        fun toggleTheme() {
+            val newMode =
+                when (_themeMode.value) {
+                    ThemeMode.LIGHT -> ThemeMode.DARK
+                    ThemeMode.DARK -> ThemeMode.LIGHT
+                    ThemeMode.SYSTEM -> ThemeMode.DARK // If system, switch to dark
+                }
+            setThemeMode(newMode)
         }
-        setThemeMode(newMode)
-    }
 
-    fun setThemeMode(mode: ThemeMode) {
-        _themeMode.value = mode
-        themePreferences.setThemeMode(mode)
-    }
+        fun setThemeMode(mode: ThemeMode) {
+            _themeMode.value = mode
+            themePreferences.setThemeMode(mode)
+        }
 
-    fun getCurrentThemeMode(): ThemeMode = _themeMode.value
-}
+        fun getCurrentThemeMode(): ThemeMode = _themeMode.value
+    }

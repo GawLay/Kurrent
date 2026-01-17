@@ -1,6 +1,5 @@
 package test.kyrie.core.components
 
-
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,55 +10,52 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
+import test.kyrie.core.theme.KurrentTypography
 import test.kyrie.core.theme.dimensions
-
 
 @Composable
 fun SectionHeader(
-    modifier: Modifier = Modifier,
     title: String,
     currencyBaseTitle: String,
+    modifier: Modifier = Modifier,
 ) {
-
     Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(
-                horizontal = MaterialTheme.dimensions.paddingMd,
-                vertical = MaterialTheme.dimensions.paddingSm
-            ),
-        verticalAlignment = Alignment.CenterVertically
-
-
+        modifier =
+            modifier
+                .fillMaxWidth()
+                .padding(
+                    horizontal = MaterialTheme.dimensions.paddingMd,
+                    vertical = MaterialTheme.dimensions.paddingSm,
+                ),
+        verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
             text = title,
             modifier = Modifier.weight(1f),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Medium
-            ),
-            color = MaterialTheme.colorScheme.onBackground
+            style =
+                KurrentTypography.titleMedium.copy(
+                    fontWeight = FontWeight.Medium,
+                ),
+            color = MaterialTheme.colorScheme.onBackground,
         )
-
 
         Spacer(modifier = Modifier.padding(horizontal = MaterialTheme.dimensions.spacingSm))
 
-
         KurrentCardView(
-            modifier = Modifier
-                .weight(1f),
-            containerColor = MaterialTheme.colorScheme.secondary
+            modifier =
+                Modifier
+                    .weight(1f),
+            containerColor = MaterialTheme.colorScheme.secondary,
         ) {
             Text(
                 text = currencyBaseTitle,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSecondary
-                ),
-                modifier = Modifier.align(Alignment.CenterHorizontally)
+                style =
+                    KurrentTypography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.onSecondary,
+                    ),
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             )
         }
-
-
     }
 }

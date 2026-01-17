@@ -4,11 +4,9 @@ plugins {
     alias(libs.plugins.hilt)
 }
 
-
 android {
-    namespace = "test.kyrie.feature.currency_list"
+    namespace = "test.kyrie.feature.currencyList"
 }
-
 
 dependencies {
     implementation(project(":core:ui"))

@@ -11,7 +11,6 @@ import javax.inject.Qualifier
 @Module
 @InstallIn(SingletonComponent::class)
 object DispatcherModule {
-
     @Provides
     @IoDispatcher
     fun provideIoDispatcher(): CoroutineDispatcher = Dispatchers.IO
@@ -36,4 +35,3 @@ annotation class DefaultDispatcher
 @Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class MainDispatcher
-

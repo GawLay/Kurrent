@@ -5,5 +5,5 @@ data class SaveConversionDomain(
     val fromCurrency: String,
     val toAmount: String,
     val toCurrency: String,
-    val timestamp: Long
+    val timestamp: Long,
 )

@@ -2,14 +2,12 @@ plugins {
     id("kurrent.android.library")
 }
 
-
 android {
     namespace = "test.kyrie.core.data"
     ksp {
         arg("room.schemaLocation", "$projectDir/schemas")
     }
 }
-
 
 dependencies {
     implementation(project(":core:domain"))

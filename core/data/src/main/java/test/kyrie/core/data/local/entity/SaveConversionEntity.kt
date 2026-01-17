@@ -10,5 +10,5 @@ data class SaveConversionEntity(
     val fromAmount: String,
     val toAmount: String,
     val toCurrency: String,
-    val timestamp: Long
+    val timestamp: Long,
 )

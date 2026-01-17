@@ -25,6 +25,7 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.devtools.ksp")
                 apply("com.google.dagger.hilt.android")
+                apply("kurrent.ktlint")
             }
             //add common dependencies for feature modules here
             dependencies {

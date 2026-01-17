@@ -9,5 +9,5 @@ data class CalculatorUiState(
     val amount: String = "1000.00",
     val convertedAmount: String = "",
     val targetCurrency: String = "USD",
-    val error: String? = null
+    val error: String? = null,
 )

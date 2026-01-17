@@ -1,5 +1,4 @@
-package test.kyrie.feature.currency_list.model
-
+package test.kyrie.feature.currencyList.model
 
 data class Currency(
     val currencyCode: String,
@@ -8,7 +7,7 @@ data class Currency(
     val countryCode: String,
     val rateToUsd: String,
     val iconUrl: String,
-    val isAvailable: Boolean
+    val isAvailable: Boolean,
 )
 
 /**
@@ -19,5 +18,5 @@ data class SavedConversion(
     val fromCurrency: String,
     val toAmount: String,
     val toCurrency: String,
-    val timestamp: Long = 0
+    val timestamp: Long = 0,
 )

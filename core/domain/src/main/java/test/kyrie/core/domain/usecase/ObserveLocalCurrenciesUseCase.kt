@@ -5,11 +5,10 @@ import test.kyrie.core.domain.model.CurrencyDomain
 import test.kyrie.core.domain.repository.CurrencyRepository
 import javax.inject.Inject
 
-class ObserveLocalCurrenciesUseCase @Inject constructor(
-    private val currencyRepository: CurrencyRepository
-) {
-    operator fun invoke(): Flow<List<CurrencyDomain>> {
-        return currencyRepository.getLocalCurrencies()
+class ObserveLocalCurrenciesUseCase
+    @Inject
+    constructor(
+        private val currencyRepository: CurrencyRepository,
+    ) {
+        operator fun invoke(): Flow<List<CurrencyDomain>> = currencyRepository.getLocalCurrencies()
     }
-}
-

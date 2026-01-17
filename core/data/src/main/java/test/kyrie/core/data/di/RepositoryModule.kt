@@ -11,11 +11,7 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
-
     @Binds
     @Singleton
-    abstract fun bindCurrencyRepository(
-        currencyRepositoryImpl: CurrencyRepositoryImpl
-    ): CurrencyRepository
+    abstract fun bindCurrencyRepository(currencyRepositoryImpl: CurrencyRepositoryImpl): CurrencyRepository
 }
-
