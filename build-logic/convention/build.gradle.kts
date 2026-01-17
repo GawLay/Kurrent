@@ -8,10 +8,16 @@ dependencies {
     compileOnly(libs.android.gradlePlugin)
     compileOnly(libs.kotlin.gradlePlugin)
     compileOnly(libs.compose.gradlePlugin)
+    compileOnly(libs.ksp.gradlePlugin)
+    compileOnly(libs.hilt.gradlePlugin)
 }
 
 gradlePlugin {
     plugins {
+        register("androidApplicationConvention") {
+            id = "kurrent.android.application"
+            implementationClass = "AndroidApplicationConventionPlugin"
+        }
         register("androidFeatureConvention") {
             id = "kurrent.android.feature"
             implementationClass = "AndroidFeatureConventionPlugin"

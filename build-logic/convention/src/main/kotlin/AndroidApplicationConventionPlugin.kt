@@ -1,4 +1,4 @@
-import com.android.build.gradle.LibraryExtension
+import com.android.build.gradle.internal.dsl.BaseAppModuleExtension
 import org.gradle.api.JavaVersion
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -9,10 +9,7 @@ import org.gradle.kotlin.dsl.getByType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
-/**
- * For data layer or non-UI modules.
- */
-class AndroidLibraryConventionPlugin : Plugin<Project> {
+class AndroidApplicationConventionPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
             val libs = extensions
@@ -20,29 +17,29 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 .named("libs")
 
             with(pluginManager) {
-                apply("com.android.library")
+                apply("com.android.application")
                 apply("org.jetbrains.kotlin.android")
+                apply("org.jetbrains.kotlin.plugin.compose")
                 apply("com.google.devtools.ksp")
                 apply("com.google.dagger.hilt.android")
             }
 
             dependencies {
+                add("implementation", libs.findBundle("android-ui").get())
+                add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
+                add("implementation", libs.findBundle("compose").get())
                 add("implementation", libs.findBundle("hilt").get())
                 add("ksp", libs.findLibrary("hilt-compiler").get())
                 add("implementation", libs.findBundle("coroutines").get())
-
-                add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
-                add("testImplementation", libs.findLibrary("junit").get())
-                add("androidTestImplementation", libs.findBundle("android-test").get())
             }
 
-            extensions.configure<LibraryExtension> {
+            extensions.configure<BaseAppModuleExtension> {
                 compileSdk = 36
 
                 defaultConfig {
                     minSdk = 27
+                    targetSdk = 36
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                    consumerProguardFiles("consumer-rules.pro")
                 }
 
                 buildTypes {
@@ -58,6 +55,10 @@ class AndroidLibraryConventionPlugin : Plugin<Project> {
                 compileOptions {
                     sourceCompatibility = JavaVersion.VERSION_17
                     targetCompatibility = JavaVersion.VERSION_17
+                }
+
+                buildFeatures {
+                    compose = true
                 }
 
                 packaging {

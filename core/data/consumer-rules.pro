@@ -1,11 +1,5 @@
 # DTO models
 -keep class test.kyrie.core.data.model.** { *; }
--keepclassmembers class test.kyrie.core.data.model.** { *; }
-
-# Gson annotations
--keepattributes Signature
--keepattributes *Annotation*
--keepattributes EnclosingMethod
 
 # Room database and entities
 -keep class test.kyrie.core.data.local.database.** { *; }
@@ -16,32 +10,21 @@
 -keep @androidx.room.Entity class *
 -keep @androidx.room.Database class * { *; }
 -keep @androidx.room.Dao class * { *; }
-
-# Room generated code
 -keep class * extends androidx.room.RoomDatabase
--keep @androidx.room.ColumnInfo class * { *; }
 -dontwarn androidx.room.paging.**
 
-
+# Repository implementations
 -keep class test.kyrie.core.data.repository.** { *; }
--keep interface test.kyrie.core.data.repository.** { *; }
 
+# Remote API
 -keep class test.kyrie.core.data.remote.** { *; }
--keep interface test.kyrie.core.data.remote.** { *; }
-
 -keep class test.kyrie.core.data.remote.interceptor.** { *; }
 
--keepattributes RuntimeVisibleAnnotations
--keepattributes RuntimeInvisibleAnnotations
--keepattributes RuntimeVisibleParameterAnnotations
--keepattributes RuntimeInvisibleParameterAnnotations
-
-# Retrofit annotations
+# Retrofit
+-keepattributes Signature, *Annotation*, RuntimeVisibleAnnotations, RuntimeVisibleParameterAnnotations
 -keepclasseswithmembers class * {
     @retrofit2.http.* <methods>;
 }
-
-# Call Signature, Response (R8 full mode strips signatures from non-kept items)
 -keep,allowobfuscation,allowshrinking interface retrofit2.Call
 -keep,allowobfuscation,allowshrinking class retrofit2.Response
 
@@ -50,53 +33,41 @@
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
 
-
-# Gson TypeToken
+# Gson
 -keep class com.google.gson.reflect.TypeToken { *; }
 -keep class * extends com.google.gson.reflect.TypeToken
-
--keepattributes Signature
-
-# Gson specific classes
 -dontwarn sun.misc.**
-
-#model class fields
 -keepclassmembers,allowobfuscation class * {
-  @com.google.gson.annotations.SerializedName <fields>;
+    @com.google.gson.annotations.SerializedName <fields>;
 }
 
+# Hilt
 -keep class dagger.hilt.** { *; }
 -keep class javax.inject.** { *; }
--keep class * extends dagger.hilt.android.internal.managers.ViewComponentManager$FragmentContextWrapper { *; }
-
 -keepclassmembers class * {
     @javax.inject.Inject <fields>;
 }
-
 -keepclasseswithmembernames class * {
     @javax.inject.Inject <init>(...);
 }
 
+# Mappers
 -keep class test.kyrie.core.data.mapper.** { *; }
 
+# Kotlin & Coroutines
+-keep class kotlin.Metadata { *; }
 -keepattributes *Annotation*
 -keepclassmembers class kotlinx.coroutines.** {
     volatile <fields>;
 }
--dontwarn kotlinx.coroutines.**
-
--keep class kotlin.Metadata { *; }
--keep class kotlin.reflect.** { *; }
--dontwarn kotlin.**
-
-# Keep Kotlin coroutines
 -keepnames class kotlinx.coroutines.internal.MainDispatcherFactory {}
 -keepnames class kotlinx.coroutines.CoroutineExceptionHandler {}
+-dontwarn kotlinx.coroutines.**
 
-# line numbers for debugging
+# Debugging
 -keepattributes SourceFile,LineNumberTable
 
-# custom exceptions
+# Exceptions
 -keep public class * extends java.lang.Exception
 
 # Remove logging in release
