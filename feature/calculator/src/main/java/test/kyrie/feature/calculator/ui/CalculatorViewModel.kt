@@ -63,7 +63,7 @@ class CalculatorViewModel @Inject constructor(
                                 conversionCurrencyUseCase.getSavedConversionCurrency()
 
                             val selectedCurrency = if (savedConversion != null) {
-                                // Find the saved currency in the list
+                                // Find the saved currency in the list via currencyCode
                                 uiCurrencies.find { it.currencyCode == savedConversion.fromCurrency }
                                     ?: uiCurrencies[0]
                             } else {
@@ -71,7 +71,7 @@ class CalculatorViewModel @Inject constructor(
                                 uiCurrencies[0]
                             }
 
-                            val initialAmount = savedConversion?.fromAmount ?: "1000.00"
+                            val initialAmount = savedConversion?.fromAmount ?: "100.00"
 
                             _uiState.value = _uiState.value.copy(
                                 isLoading = false,

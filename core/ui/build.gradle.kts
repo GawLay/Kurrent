@@ -7,7 +7,5 @@ android {
 }
 
 dependencies {
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.bundles.android.test)
     debugImplementation(libs.ui.tooling)
 }

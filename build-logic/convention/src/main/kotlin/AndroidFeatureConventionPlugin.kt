@@ -32,10 +32,18 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
                 add("implementation", libs.findBundle("compose").get())
                 add("implementation", libs.findBundle("image-loading").get())
+                add("debugImplementation", libs.findLibrary("ui-tooling").get())
 
                 add("implementation", libs.findBundle("hilt").get())
                 add("ksp", libs.findLibrary("hilt-compiler").get())
                 add("implementation", libs.findBundle("coroutines").get())
+
+                // Test dependencies
+                add("testImplementation", libs.findLibrary("junit").get())
+                add("testImplementation", libs.findLibrary("mockk").get())
+                add("testImplementation", libs.findLibrary("kotlinx-coroutines-test").get())
+                add("testImplementation", libs.findLibrary("turbine").get())
+                add("androidTestImplementation", libs.findBundle("android-test").get())
             }
 
             extensions.configure<LibraryExtension> {
