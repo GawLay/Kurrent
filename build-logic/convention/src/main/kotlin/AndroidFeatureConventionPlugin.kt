@@ -23,6 +23,8 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 apply("com.android.library")
                 apply("org.jetbrains.kotlin.android")
                 apply("org.jetbrains.kotlin.plugin.compose")
+                apply("com.google.devtools.ksp")
+                apply("com.google.dagger.hilt.android")
             }
             //add common dependencies for feature modules here
             dependencies {
@@ -30,6 +32,10 @@ class AndroidFeatureConventionPlugin : Plugin<Project> {
                 add("implementation", platform(libs.findLibrary("androidx-compose-bom").get()))
                 add("implementation", libs.findBundle("compose").get())
                 add("implementation", libs.findBundle("image-loading").get())
+
+                add("implementation", libs.findBundle("hilt").get())
+                add("ksp", libs.findLibrary("hilt-compiler").get())
+                add("implementation", libs.findBundle("coroutines").get())
             }
 
             extensions.configure<LibraryExtension> {
