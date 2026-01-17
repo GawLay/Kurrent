@@ -20,7 +20,4 @@ dependencies {
 
     implementation(platform(libs.okhttp.bom))
     implementation(libs.bundles.network)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.bundles.android.test)
 }

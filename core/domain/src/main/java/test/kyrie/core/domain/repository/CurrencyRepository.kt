@@ -8,9 +8,9 @@ import test.kyrie.core.domain.util.Result
 interface CurrencyRepository {
 
     /**
-     * Fetches all currencies by calling both getSupportedCurrencies
-     * and getLatestRates in parallel,.
-     * combines them, and caches in local database. viola
+     * Fetches all currencies  by calling both getSupportedCurrencies
+     * and getLatestRates APIs in parallel,.
+     * combines them, and caches in local database. viola...
      */
     suspend fun getCurrencies(forceRefresh: Boolean = false): Flow<Result<List<CurrencyDomain>>>
 
